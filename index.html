@@ -1,159 +1,323 @@
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kỷ Niệm 20 Năm Thành Lập - THCS & THPT Đô Lương 4</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti -->
+    <!-- Canvas Confetti & Fireworks -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;0,900;1,700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
+
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background: radial-gradient(circle at center, #800000 0%, #3a0000 70%, #1a0000 100%);
+            background: #110000;
             min-height: 100vh;
             color: #fff;
+            overflow-x: hidden;
         }
 
-        .title-font {
-            font-family: 'Playfair Display', serif;
+        /* Nền Canvas Hiệu Ứng Hạt Lấp Lánh */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        /* Thẻ Glassmorphism cao cấp */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 215, 0, 0.6);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.2);
+        /* Huy Hiệu Vàng Ánh Kim Hoàng Gia */
+        .royal-badge {
+            background: linear-gradient(135deg, #FFF59D 0%, #FBC02D 25%, #FFA000 50%, #F57F17 75%, #FFD54F 100%);
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(120, 0, 0, 0.4);
         }
 
-        /* Huy hiệu tên trường bằng vàng ánh kim */
-        .gold-badge {
-            background: linear-gradient(135deg, #FFE082 0%, #FFD54F 30%, #FFB300 70%, #FF8F00 100%);
-            border: 2px solid #FFF8E1;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.8);
-        }
-
-        .gold-text-glow {
+        .gold-glow-text {
             color: #FFF59D;
-            text-shadow: 0 0 12px rgba(255, 235, 59, 0.8), 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 2px 8px rgba(0,0,0,0.9);
         }
 
-        .school-title-shadow {
+        .school-title {
             color: #7A0000;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(0,0,0,0.3);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 -1px 0 rgba(0,0,0,0.4);
+        }
+
+        /* Khung Thủy Tinh Cao Cấp */
+        .glass-card {
+            background: rgba(20, 0, 0, 0.65);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.15);
+        }
+
+        /* Hiệu ứng viền phát sáng */
+        .glow-border {
+            position: relative;
+        }
+        .glow-border::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 9999px;
+            background: linear-gradient(45deg, #FFD700, #FF4500, #FFD700, #FF8C00);
+            z-index: -1;
+            filter: blur(8px);
+            opacity: 0.7;
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; filter: blur(6px); }
+            100% { opacity: 0.9; filter: blur(12px); }
         }
 
         .canvas-container {
             touch-action: none;
-            user-select: none;
+        }
+
+        /* Tùy chỉnh thanh trượt Slider */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #FFD700;
+            cursor: pointer;
+            border: 2px solid #7A0000;
+            box-shadow: 0 0 10px rgba(255,215,0,0.8);
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between p-3 md:p-6 relative overflow-x-hidden">
+<body class="flex flex-col items-center justify-between p-3 md:p-6 relative">
 
-    <!-- Header Nổi Bật Tên Trường -->
+    <!-- Canvas hạt ánh kim lấp lánh hiệu ứng 3D -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Header Sang Trọng -->
     <header class="text-center my-3 max-w-2xl w-full px-2 z-10">
         
         <!-- Nhãn Kỷ Niệm 20 Năm -->
-        <div class="inline-flex items-center gap-2 px-5 py-1.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-red-950 font-extrabold text-xs md:text-sm rounded-full shadow-2xl mb-3 tracking-widest uppercase border border-white/60">
-            <i class="fa-solid fa-crown text-amber-800"></i>
+        <div class="inline-flex items-center gap-2 px-6 py-1.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-red-950 font-black text-xs md:text-sm rounded-full shadow-2xl mb-3 tracking-widest uppercase border-2 border-white animate-pulse">
+            <i class="fa-solid fa-crown text-amber-900"></i>
             <span>CHÀO MỪNG KỶ NIỆM 20 NĂM (2006 - 2026)</span>
-            <i class="fa-solid fa-crown text-amber-800"></i>
+            <i class="fa-solid fa-crown text-amber-900"></i>
         </div>
 
-        <!-- Khung Huy Hiệu Tên Trường Siêu Rõ Nét -->
-        <div class="gold-badge py-3.5 px-4 md:px-8 rounded-2xl my-2 transform transition hover:scale-[1.02]">
-            <h1 class="school-title-shadow text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight">
+        <!-- Tên Trường Sắc Nét 100% -->
+        <div class="royal-badge py-3.5 px-4 md:px-8 rounded-2xl my-2 transform transition duration-300 hover:scale-[1.02]">
+            <h1 class="school-title text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight">
                 TRƯỜNG THCS & THPT ĐÔ LƯƠNG 4
             </h1>
         </div>
 
-        <!-- Khấu hiệu -->
-        <p class="gold-text-glow text-sm md:text-base font-bold italic mt-2 tracking-wide">
-            "Gắn Kết - Vươn Xa" • Công Cụ Tạo Avatar Kỷ Niệm
+        <!-- Khẩu Hiệu -->
+        <p class="gold-glow-text text-sm md:text-base font-extrabold italic mt-2 tracking-wider">
+            ✨ "GẮN KẾT - VƯƠN XA" • TẠO AVATAR CÁ NHÂN ĐẲNG CẤP ✨
         </p>
     </header>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-md glass-card rounded-3xl p-5 my-2 flex flex-col items-center relative z-10 text-gray-800">
+    <!-- Khối Nội Dung Chính -->
+    <main class="w-full max-w-md glass-card rounded-3xl p-5 my-2 flex flex-col items-center relative z-10">
         
-        <!-- Canvas Viewport -->
-        <div class="canvas-container relative w-full aspect-square rounded-full overflow-hidden shadow-2xl border-4 border-amber-400/90 bg-slate-950 group">
-            <canvas id="avatarCanvas" width="1200" height="1200" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-            
-            <!-- Hướng dẫn khi chưa có ảnh -->
-            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/85 text-white p-6 text-center transition-opacity duration-300 pointer-events-none">
-                <div class="w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center mb-3 border border-amber-400/50">
-                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-amber-300 animate-bounce"></i>
+        <!-- Khung Canvas Tạo Ảnh Đại Diện -->
+        <div class="glow-border w-full aspect-square rounded-full mb-2">
+            <div class="canvas-container relative w-full h-full rounded-full overflow-hidden bg-slate-950 shadow-2xl">
+                <canvas id="avatarCanvas" width="1200" height="1200" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+                
+                <!-- Hướng dẫn khi chưa chọn ảnh -->
+                <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 text-white p-6 text-center transition-opacity duration-300 pointer-events-none">
+                    <div class="w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center mb-3 border border-amber-400/50 shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-amber-300 animate-bounce"></i>
+                    </div>
+                    <p class="font-extrabold text-base md:text-lg text-amber-200">Nhấn nút bên dưới để tải ảnh lên</p>
+                    <p class="text-xs text-slate-300 mt-1">Ảnh sẽ tự cắt chuẩn khít 100% theo viền đỏ Facebook</p>
                 </div>
-                <p class="font-extrabold text-base md:text-lg text-amber-200">Bấm nút bên dưới để chọn ảnh</p>
-                <p class="text-xs text-slate-300 mt-1">Ảnh sẽ tự động cắt vừa khít hình tròn Facebook</p>
             </div>
         </div>
 
-        <!-- Bảng điều khiển -->
-        <div class="w-full mt-5 space-y-3.5">
+        <!-- Bảng Bàn Phím Điều Khiển -->
+        <div class="w-full mt-4 space-y-3.5">
             
             <!-- Nút Tải Ảnh Cá Nhân -->
-            <label for="imageInput" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-red-800 hover:from-red-800 hover:to-red-900 text-yellow-300 font-extrabold py-3.5 px-6 rounded-xl shadow-lg cursor-pointer transition transform active:scale-95 border border-yellow-400/40">
+            <label for="imageInput" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-red-800 hover:from-red-800 hover:to-red-900 text-yellow-300 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl cursor-pointer transition transform active:scale-95 border-2 border-yellow-400/50">
                 <i class="fa-solid fa-camera text-xl"></i>
                 <span class="text-base tracking-wide">CHỌN ẢNH CÁ NHÂN</span>
                 <input type="file" id="imageInput" accept="image/*" class="hidden">
             </label>
 
-            <!-- Thanh công cụ Zoom & Xoay -->
-            <div class="bg-slate-100/90 p-3.5 rounded-xl space-y-2.5 border border-slate-300 shadow-inner">
-                <!-- Zoom Slider -->
+            <!-- Thanh Trượt Zoom & Xoay -->
+            <div class="bg-black/40 p-3.5 rounded-2xl space-y-3 border border-amber-500/30">
+                <!-- Phóng to / Thu nhỏ -->
                 <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold text-slate-600 w-16 flex items-center gap-1"><i class="fa-solid fa-magnifying-glass"></i> Zoom:</span>
-                    <input type="range" id="zoomRange" min="0.1" max="3" step="0.01" value="1" disabled class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-red-700 disabled:opacity-40">
+                    <span class="text-xs font-bold text-amber-300 w-16 flex items-center gap-1"><i class="fa-solid fa-magnifying-glass"></i> Zoom:</span>
+                    <input type="range" id="zoomRange" min="0.1" max="3" step="0.01" value="1" disabled class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400 disabled:opacity-30">
                 </div>
 
-                <!-- Rotate Slider -->
+                <!-- Xoay ảnh -->
                 <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold text-slate-600 w-16 flex items-center gap-1"><i class="fa-solid fa-rotate"></i> Xoay:</span>
-                    <input type="range" id="rotateRange" min="-180" max="180" step="1" value="0" disabled class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-red-700 disabled:opacity-40">
+                    <span class="text-xs font-bold text-amber-300 w-16 flex items-center gap-1"><i class="fa-solid fa-rotate"></i> Xoay:</span>
+                    <input type="range" id="rotateRange" min="-180" max="180" step="1" value="0" disabled class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400 disabled:opacity-30">
                 </div>
 
                 <!-- Nút thao tác nhanh -->
                 <div class="flex justify-between gap-2 pt-1">
-                    <button id="centerBtn" disabled class="flex-1 py-1.5 px-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-700 disabled:opacity-40 shadow-sm">
+                    <button id="centerBtn" disabled class="flex-1 py-1.5 px-2 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/40 rounded-xl text-xs font-bold text-amber-200 disabled:opacity-30 transition">
                         <i class="fa-solid fa-crosshairs mr-1"></i> Căn giữa
                     </button>
-                    <button id="resetBtn" disabled class="flex-1 py-1.5 px-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-700 disabled:opacity-40 shadow-sm">
+                    <button id="resetBtn" disabled class="flex-1 py-1.5 px-2 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/40 rounded-xl text-xs font-bold text-amber-200 disabled:opacity-30 transition">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> Đặt lại
                     </button>
                 </div>
             </div>
 
-            <!-- Nút Tải Ảnh Xuất Facebook -->
-            <button id="downloadBtn" disabled class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-500 hover:to-yellow-500 text-red-950 font-black py-3.5 px-6 rounded-xl shadow-xl transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-white">
+            <!-- Nút Tải Ảnh HD Đăng Facebook -->
+            <button id="downloadBtn" disabled class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-500 hover:to-yellow-500 text-red-950 font-black py-4 px-6 rounded-2xl shadow-2xl transition transform active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed border-2 border-white">
                 <i class="fa-solid fa-download text-xl"></i>
                 <span class="text-base tracking-wide">TẢI ÂNH HD ĐĂNG FACEBOOK</span>
             </button>
         </div>
 
-        <p class="text-[11px] text-slate-500 text-center mt-3 font-medium">
-            <i class="fa-solid fa-hand-pointer text-amber-600"></i> Dùng ngón tay/chuột kéo trực tiếp trên hình để căn chỉnh góc mặt.
+        <p class="text-[11px] text-amber-200/70 text-center mt-3 font-medium">
+            <i class="fa-solid fa-hand-pointer text-amber-400"></i> Mẹo: Dùng ngón tay/chuột kéo trực tiếp trên ảnh để di chuyển căn chỉnh.
         </p>
     </main>
 
-    <!-- Footer -->
-    <footer class="text-center text-amber-200/80 text-xs my-2 font-medium">
+    <!-- Xem Trước Giao Diện Facebook Chân Thực -->
+    <section class="w-full max-w-md glass-card rounded-3xl p-4 my-3 relative z-10">
+        <h3 class="text-xs font-extrabold text-amber-300 uppercase tracking-widest mb-3 text-center flex items-center justify-center gap-2">
+            <i class="fa-brands fa-facebook text-blue-400 text-sm"></i> Xem Trước Khi Thay Avatar Facebook
+        </h3>
+        
+        <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-700 shadow-xl">
+            <!-- Ảnh bìa giả lập -->
+            <div class="h-20 bg-gradient-to-r from-red-900 via-amber-800 to-red-950 relative"></div>
+            
+            <!-- Hồ sơ Facebook -->
+            <div class="px-4 pb-4 pt-0 relative flex flex-col items-center text-center -mt-10">
+                <div class="w-20 h-20 rounded-full border-4 border-slate-900 overflow-hidden shadow-2xl bg-black">
+                    <img id="fbPreviewImg" src="frame.png" class="w-full h-full object-cover" alt="Facebook Avatar Preview">
+                </div>
+                <div class="mt-2 flex items-center gap-1.5">
+                    <span class="font-bold text-sm text-white">Tên Facebook Của Bạn</span>
+                    <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i>
+                </div>
+                <p class="text-[11px] text-slate-400">Tự hào học sinh / cựu học sinh Đô Lương 4 ❤️</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chân trang -->
+    <footer class="text-center text-amber-200/60 text-xs my-2 font-medium z-10">
         © 2006 - 2026 Trường THCS & THPT Đô Lương 4. Tự hào 20 năm phát triển.
     </footer>
 
-    <!-- Script Xử Lý -->
+    <!-- Script Xử Lý Toàn Bộ Lực Lượng -->
     <script>
+        /* -------------------------------------------------------------
+           1. HỆ THỐNG NỀN HIỆU ỨNG HẠT VÀNG NHƯ SÂN SÂN LỄ HỘI 3D
+        ------------------------------------------------------------- */
+        const pCanvas = document.getElementById('particleCanvas');
+        const pCtx = pCanvas.getContext('2d');
+        let particles = [];
+
+        function resizePCanvas() {
+            pCanvas.width = window.innerWidth;
+            pCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizePCanvas);
+        resizePCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * pCanvas.width;
+                this.y = Math.random() * pCanvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = -(Math.random() * 0.8 + 0.2);
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.8 + 0.2;
+                this.color = Math.random() > 0.3 ? '#FFD700' : '#FF4500';
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < 0) this.y = pCanvas.height;
+                if (this.x < 0 || this.x > pCanvas.width) this.x = Math.random() * pCanvas.width;
+            }
+            draw() {
+                pCtx.save();
+                pCtx.globalAlpha = this.opacity;
+                pCtx.fillStyle = this.color;
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fill();
+                pCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+
+        /* -------------------------------------------------------------
+           2. HỆ THỐNG ÂM THANH MỪNG LỄ HỘI (Web Audio API)
+        ------------------------------------------------------------- */
+        function playCelebrationSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = audioCtx.currentTime;
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.4); // C6
+                
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.5);
+            } catch(e) {}
+        }
+
+
+        /* -------------------------------------------------------------
+           3. LÕI GHÉP CẮT ẢNH CHUẨN XÁC 100% CỦA CANVAS
+        ------------------------------------------------------------- */
         const canvas = document.getElementById('avatarCanvas');
         const ctx = canvas.getContext('2d');
         const imageInput = document.getElementById('imageInput');
@@ -163,8 +327,9 @@
         const resetBtn = document.getElementById('resetBtn');
         const downloadBtn = document.getElementById('downloadBtn');
         const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const fbPreviewImg = document.getElementById('fbPreviewImg');
 
-        // Tải Khung Logo (frame.png)
+        // Khung ảnh cố định trùng tên frame.png
         const frameImage = new Image();
         frameImage.src = 'frame.png';
 
@@ -176,24 +341,24 @@
         let isDragging = false;
         let startX, startY;
 
-        // Render Canvas chuẩn 100% hình tròn
+        // Render Canvas cắt khít 100% viền đỏ
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             
-            // Tỷ lệ bán kính 0.448 xén vừa khít bên trong đường viền đỏ ngoài cùng
+            // Tỷ lệ bán kính 0.448 xén vừa khít bên trong viền đỏ ngoài cùng của logo
             const radius = canvas.width * 0.448; 
 
-            // 1. Vẽ Ảnh Cá Nhân (Mặt nạ cắt tròn khít 100%)
+            // 1. Vẽ Ảnh Cá Nhân (Mặt nạ cắt tròn)
             if (userImage) {
                 ctx.save();
                 
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.clip(); // Cắt gọn gàng không bị lòi góc ra ngoài
+                ctx.clip(); // Xén vừa vặn không thò góc thừa ra ngoài
 
                 ctx.translate(imgX, imgY);
                 ctx.rotate((imgRotation * Math.PI) / 180);
@@ -207,11 +372,14 @@
             if (frameImage.complete && frameImage.naturalWidth !== 0) {
                 ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
             }
+
+            // Cập nhật giao diện xem trước Facebook
+            fbPreviewImg.src = canvas.toDataURL('image/png');
         }
 
         frameImage.onload = render;
 
-        // Xử lý Tải Ảnh Cá Nhân
+        // Xử lý khi tải ảnh người dùng lên
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -257,7 +425,7 @@
             render();
         });
 
-        // Lăn chuột để Zoom
+        // Lăn chuột để Phóng to/Thu nhỏ
         canvas.addEventListener('wheel', (e) => {
             if (!userImage) return;
             e.preventDefault();
@@ -329,11 +497,29 @@
 
         // Nút Tải Ảnh Về
         downloadBtn.addEventListener('click', () => {
+            playCelebrationSound();
+
+            // Hiệu ứng pháo hoa bắn từ 2 bên màn hình
             confetti({
-                particleCount: 120,
-                spread: 80,
+                particleCount: 100,
+                spread: 70,
                 origin: { y: 0.6 }
             });
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 50,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 50,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 250);
 
             const link = document.createElement('a');
             link.download = 'avatar-20nam-doluong4.png';
