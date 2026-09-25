@@ -154,17 +154,19 @@
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = canvas.width / 2; // Bán kính hình tròn vừa khít viền 1:1
+            
+            // Giảm bán kính xuống 0.465 (khoảng 93% đường kính) để vừa khít bên trong viền đỏ ngoài cùng của logo
+            const radius = canvas.width * 0.465; 
 
-            // 1. Vẽ Ảnh Người Dùng (Sử dụng Mặt nạ cắt hình tròn - Clipping Mask)
+            // 1. Vẽ Ảnh Người Dùng (Sử dụng Mặt nạ cắt hình tròn khít viền đỏ)
             if (userImage) {
                 ctx.save();
                 
-                // Tạo vùng cắt hình tròn chuẩn Facebook
+                // Tạo vùng cắt hình tròn khít viền logo
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.clip(); // Tất cả nét vẽ sau lệnh này sẽ bị xén gọn trong hình tròn
+                ctx.clip(); // Xén gọn ảnh cá nhân bên trong vòng tròn đỏ
 
                 // Tọa độ và xoay ảnh
                 ctx.translate(imgX, imgY);
@@ -172,7 +174,7 @@
                 ctx.scale(imgScale, imgScale);
                 ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
                 
-                ctx.restore(); // Khôi phục vùng vẽ bình thường
+                ctx.restore(); // Khôi phục vùng vẽ
             }
 
             // 2. Vẽ Khung Logo (frame.png) đè lên trên cùng
