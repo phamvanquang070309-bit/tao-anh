@@ -1,287 +1,837 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Ảnh Kỷ Niệm 20 Năm - THCS & THPT Đô Lương 4</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+<title>20 Năm THCS & THPT Đô Lương 4</title>
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #b71c1c;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .header p {
-            color: #555;
-            font-size: 0.95rem;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.15), transparent 30%),
+        linear-gradient(135deg, #071a3d, #123f78, #0b244d);
+    color: white;
+    min-height: 100vh;
+}
 
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            max-width: 500px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* ================= HEADER ================= */
 
-        .canvas-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #eee;
-            touch-action: none;
-        }
+header {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px 20px;
+    position: relative;
+    overflow: hidden;
+}
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            cursor: move;
-        }
+header::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(255, 215, 80, .12);
+    top: -200px;
+    left: -150px;
+    filter: blur(20px);
+}
 
-        .controls {
-            width: 100%;
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+header::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(0, 195, 255, .12);
+    bottom: -250px;
+    right: -150px;
+    filter: blur(20px);
+}
 
-        .btn-upload {
-            background-color: #1976d2;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.hero {
+    max-width: 1000px;
+    position: relative;
+    z-index: 2;
+}
 
-        .btn-upload:hover {
-            background-color: #1565c0;
-        }
+.badge {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,.3);
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
 
-        input[type="file"] {
-            display: none;
-        }
+.hero h1 {
+    font-size: clamp(40px, 8vw, 85px);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(90deg, #ffe58a, #fff, #ffd34e);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+}
 
-        .zoom-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: #333;
-        }
+.hero h2 {
+    font-size: clamp(22px, 4vw, 42px);
+    margin-bottom: 15px;
+}
 
-        .zoom-control input {
-            flex: 1;
-        }
+.hero p {
+    font-size: 18px;
+    opacity: .85;
+    line-height: 1.7;
+    max-width: 750px;
+    margin: auto;
+}
 
-        .btn-download {
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.scroll-btn {
+    display: inline-block;
+    margin-top: 35px;
+    padding: 15px 30px;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #09234d;
+    background: linear-gradient(135deg, #ffe27a, #ffbd27);
+    font-weight: bold;
+    box-shadow: 0 10px 30px rgba(255,190,30,.25);
+    transition: .3s;
+}
 
-        .btn-download:hover {
-            background-color: #1b5e20;
-        }
+.scroll-btn:hover {
+    transform: translateY(-4px);
+}
 
-        .instructions {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: #666;
-            text-align: center;
-        }
-    </style>
+/* ================= SECTION ================= */
+
+section {
+    padding: 90px 20px;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.section-title span {
+    color: #ffd34e;
+    font-weight: bold;
+}
+
+.section-title h2 {
+    font-size: 40px;
+    margin-top: 8px;
+}
+
+.section-title p {
+    margin-top: 12px;
+    opacity: .7;
+}
+
+/* ================= CARDS ================= */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 25px;
+    padding: 35px 25px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    background: rgba(255,255,255,.12);
+}
+
+.card .icon {
+    font-size: 45px;
+    margin-bottom: 18px;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    opacity: .7;
+    line-height: 1.6;
+}
+
+/* ================= PHOTO MAKER ================= */
+
+.editor-wrapper {
+    max-width: 950px;
+    margin: auto;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 30px;
+    padding: 25px;
+    backdrop-filter: blur(15px);
+}
+
+.editor {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 25px;
+}
+
+/* Canvas */
+
+.canvas-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 600px;
+    padding: 20px;
+    border-radius: 22px;
+    background:
+        linear-gradient(45deg, #ddd 25%, transparent 25%),
+        linear-gradient(-45deg, #ddd 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ddd 75%),
+        linear-gradient(-45deg, transparent 75%, #ddd 75%);
+    background-size: 30px 30px;
+    background-position: 0 0, 0 15px, 15px -15px, -15px 0;
+}
+
+/*
+    Đây là vùng xem trước.
+    Ảnh người dùng nằm dưới.
+    frame.png nằm trên.
+*/
+
+#preview {
+    position: relative;
+    width: min(100%, 600px);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+}
+
+/* Ảnh người dùng */
+
+#userImage {
+    position: absolute;
+    max-width: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+    transform-origin: center center;
+    display: none;
+}
+
+#userImage:active {
+    cursor: grabbing;
+}
+
+/* Khung cố định */
+
+#frameImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ================= CONTROLS ================= */
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.control-box {
+    background: rgba(0,0,0,.15);
+    padding: 20px;
+    border-radius: 18px;
+}
+
+.control-box h3 {
+    margin-bottom: 12px;
+    font-size: 17px;
+}
+
+input[type="file"] {
+    width: 100%;
+    color: white;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #ffd34e;
+}
+
+.range-value {
+    margin-top: 7px;
+    opacity: .7;
+    font-size: 14px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn {
+    border: none;
+    padding: 15px 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: .25s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ffd95c, #ffb91f);
+    color: #142d55;
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,.15);
+}
+
+.hint {
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: .65;
+}
+
+/* ================= TIMELINE ================= */
+
+.timeline {
+    max-width: 800px;
+    margin: auto;
+}
+
+.timeline-item {
+    position: relative;
+    padding: 25px 30px;
+    margin-bottom: 20px;
+    border-left: 3px solid #ffd34e;
+    background: rgba(255,255,255,.06);
+    border-radius: 0 18px 18px 0;
+}
+
+.timeline-item h3 {
+    color: #ffd34e;
+    margin-bottom: 8px;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    padding: 50px 20px;
+    background: rgba(0,0,0,.25);
+}
+
+footer h2 {
+    color: #ffd34e;
+    margin-bottom: 10px;
+}
+
+footer p {
+    opacity: .65;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 850px) {
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .editor {
+        grid-template-columns: 1fr;
+    }
+
+    .canvas-area {
+        min-height: auto;
+    }
+
+    .controls {
+        order: 2;
+    }
+}
+
+@media (max-width: 500px) {
+
+    section {
+        padding: 60px 15px;
+    }
+
+    .editor-wrapper {
+        padding: 12px;
+    }
+
+    .canvas-area {
+        padding: 8px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <h1>THCS & THPT ĐÔ LƯƠNG 4</h1>
-        <p>Tạo avatar kỷ niệm 20 năm thành lập (2006 - 2026)</p>
+<!-- ================= HERO ================= -->
+
+<header>
+
+    <div class="hero">
+
+        <div class="badge">
+            🎓 HÀNH TRÌNH 20 NĂM
+        </div>
+
+        <h1>20 NĂM</h1>
+
+        <h2>THCS & THPT ĐÔ LƯƠNG 4</h2>
+
+        <p>
+            Hai mươi năm – một hành trình đáng nhớ.
+            Cùng lưu giữ những khoảnh khắc đẹp
+            và tạo nên bức ảnh kỷ niệm của riêng bạn.
+        </p>
+
+        <a href="#taoanh" class="scroll-btn">
+            📸 TẠO ẢNH KỶ NIỆM
+        </a>
+
     </div>
+
+</header>
+
+
+<!-- ================= GIỚI THIỆU ================= -->
+
+<section>
 
     <div class="container">
-        <div class="canvas-wrapper">
-            <canvas id="avatarCanvas" width="800" height="800"></canvas>
+
+        <div class="section-title">
+            <span>MỘT CHẶNG ĐƯỜNG</span>
+            <h2>20 năm – Một thanh xuân</h2>
+            <p>
+                Nơi những kỷ niệm học trò được lưu giữ qua từng thế hệ.
+            </p>
         </div>
 
-        <div class="controls">
-            <label class="btn-upload" for="imageInput">
-                📸 Chọn ảnh cá nhân
-            </label>
-            <input type="file" id="imageInput" accept="image/*">
+        <div class="info-grid">
 
-            <div class="zoom-control">
-                <span>🔍 Phóng to/Thu nhỏ:</span>
-                <input type="range" id="zoomRange" min="0.2" max="3" step="0.05" value="1" disabled>
+            <div class="card">
+                <div class="icon">🏫</div>
+                <h3>Mái trường</h3>
+                <p>
+                    Nơi ghi dấu những năm tháng học tập,
+                    trưởng thành và những tình bạn đẹp.
+                </p>
             </div>
 
-            <button class="btn-download" id="downloadBtn" disabled>💾 Tải ảnh về máy</button>
+            <div class="card">
+                <div class="icon">🎓</div>
+                <h3>Thanh xuân</h3>
+                <p>
+                    Mỗi bức ảnh là một mảnh ghép
+                    của tuổi học trò đáng nhớ.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">💛</div>
+                <h3>Kỷ niệm</h3>
+                <p>
+                    Cùng nhau tạo nên một dấu ấn
+                    đặc biệt nhân dịp 20 năm thành lập trường.
+                </p>
+            </div>
+
         </div>
 
-        <p class="instructions">Mẹo: Kéo thả trực tiếp trên hình để điều chỉnh vị trí ảnh cá nhân.</p>
     </div>
 
-    <script>
-        const canvas = document.getElementById('avatarCanvas');
-        const ctx = canvas.getContext('2d');
-        const imageInput = document.getElementById('imageInput');
-        const zoomRange = document.getElementById('zoomRange');
-        const downloadBtn = document.getElementById('downloadBtn');
+</section>
 
-        // Nối trực tiếp tới file frame.png trong cùng thư mục
-        const frameImage = new Image();
-        frameImage.src = 'frame.png';
 
-        let userImage = null;
-        let imgX = canvas.width / 2;
-        let imgY = canvas.height / 2;
-        let imgScale = 1;
-        let isDragging = false;
-        let startX, startY;
+<!-- ================= TẠO ẢNH ================= -->
 
-        // Vẽ canvas
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+<section id="taoanh">
 
-            // 1. Vẽ ảnh người dùng (nằm ở lớp dưới)
-            if (userImage) {
-                ctx.save();
-                ctx.translate(imgX, imgY);
-                ctx.scale(imgScale, imgScale);
-                ctx.drawImage(
-                    userImage, 
-                    -userImage.width / 2, 
-                    -userImage.height / 2
-                );
-                ctx.restore();
-            }
+    <div class="container">
 
-            // 2. Vẽ khung logo kỷ niệm (đè lên trên)
-            if (frameImage.complete && frameImage.naturalWidth !== 0) {
-                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-            }
-        }
+        <div class="section-title">
 
-        frameImage.onload = draw;
+            <span>CHỈ VÀI BƯỚC</span>
 
-        // Tải ảnh cá nhân lên
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            <h2>Tạo ảnh kỷ niệm của bạn</h2>
 
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                userImage = new Image();
-                userImage.onload = () => {
-                    imgX = canvas.width / 2;
-                    imgY = canvas.height / 2;
-                    
-                    const scaleX = canvas.width / userImage.width;
-                    const scaleY = canvas.height / userImage.height;
-                    imgScale = Math.max(scaleX, scaleY);
-                    
-                    zoomRange.value = imgScale;
-                    zoomRange.disabled = false;
-                    downloadBtn.disabled = false;
+            <p>
+                Chọn ảnh → căn chỉnh → tải ảnh về máy.
+            </p>
 
-                    draw();
-                };
-                userImage.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
+        </div>
 
-        // Điều chỉnh zoom
-        zoomRange.addEventListener('input', (e) => {
-            imgScale = parseFloat(e.target.value);
-            draw();
-        });
 
-        // Xử lý di chuyển ảnh
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: (clientX - rect.left) * (canvas.width / rect.width),
-                y: (clientY - rect.top) * (canvas.height / rect.height)
-            };
-        }
+        <div class="editor-wrapper">
 
-        function startMove(e) {
-            if (!userImage) return;
-            isDragging = true;
-            const pos = getPos(e);
-            startX = pos.x - imgX;
-            startY = pos.y - imgY;
-        }
+            <div class="editor">
 
-        function move(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            const pos = getPos(e);
-            imgX = pos.x - startX;
-            imgY = pos.y - startY;
-            draw();
-        }
+                <!-- CANVAS -->
 
-        function stopMove() {
-            isDragging = false;
-        }
+                <div class="canvas-area">
 
-        canvas.addEventListener('mousedown', startMove);
-        canvas.addEventListener('mousemove', move);
-        window.addEventListener('mouseup', stopMove);
+                    <div id="preview">
 
-        canvas.addEventListener('touchstart', startMove);
-        canvas.addEventListener('touchmove', move);
-        window.addEventListener('touchend', stopMove);
+                        <!-- Ảnh cá nhân -->
+                        <img id="userImage">
 
-        // Tải xuống kết quả
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'avatar-ky-niem-doluong4.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    </script>
-</body>
-</html>
+                        <!-- KHUNG CỐ ĐỊNH -->
+                        <img
+                            id="frameImage"
+                            src="frame.png"
+                            alt="Khung kỷ niệm 20 năm"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROLS -->
+
+                <div class="controls">
+
+                    <div class="control-box">
+
+                        <h3>📷 Chọn ảnh của bạn</h3>
+
+                        <input
+                            type="file"
+                            id="upload"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    <div class="control-box">
+
+                        <h3>🔍 Phóng to / thu nhỏ</h3>
+
+                        <input
+                            type="range"
+                            id="zoom"
+                            min="0.2"
+                            max="3"
+                            value="1"
+                            step="0.01"
+                        >
+
+                        <div class="range-value">
+                            Tỉ lệ:
+                            <span id="zoomValue">100%</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="control-box">
+
+                        <h3>↔️ Vị trí ngang</h3>
+
+                        <input
+                            type="range"
+                            id="posX"
+                            min="-500"
+                            max="500"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="control-box">
+
+                        <h3>↕️ Vị trí dọc</h3>
+
+                        <input
+                            type="range"
+                            id="posY"
+                            min="-500"
+                            max="500"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="buttons">
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="resetImage()"
+                        >
+                            🔄 Căn lại ảnh
+                        </button>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="downloadImage()"
+                        >
+                            ⬇️ LƯU ẢNH KỶ NIỆM
+                        </button>
+
+                    </div>
+
+
+                    <div class="hint">
+                        💡 Mẹo: Bạn có thể kéo trực tiếp ảnh bằng chuột
+                        hoặc dùng thanh điều chỉnh để căn khuôn.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= HÀNH TRÌNH ================= -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>DẤU ẤN THỜI GIAN</span>
+
+            <h2>20 năm – 20 dấu ấn</h2>
+
+            <p>
+                Một hành trình được tạo nên từ biết bao thế hệ.
+            </p>
+
+        </div>
+
+
+        <div class="timeline">
+
+            <div class="timeline-item">
+                <h3>🎒 Những ngày đầu</h3>
+                <p>
+                    Những bước chân đầu tiên trên hành trình
+                    xây dựng và phát triển mái trường.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>📚 Những năm tháng học trò</h3>
+                <p>
+                    Bài giảng, sân trường, bạn bè,
+                    thầy cô và vô vàn kỷ niệm.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>🌱 Trưởng thành</h3>
+                <p>
+                    Từ mái trường, nhiều thế hệ học sinh
+                    đã trưởng thành và bước vào tương lai.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>🎉 Kỷ niệm 20 năm</h3>
+                <p>
+                    Cùng nhau lưu giữ khoảnh khắc đặc biệt
+                    của mái trường THCS & THPT Đô Lương 4.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>THCS & THPT ĐÔ LƯƠNG 4</h2>
+
+    <p>
+        20 năm – Một hành trình • Một mái trường • Một thanh xuân
+    </p>
+
+    <p style="margin-top:15px;">
+        © Kỷ niệm 20 năm thành lập trường
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   BIẾN
+========================================================= */
+
+const upload = document.getElementById("upload");
+const userImage = document.getElementById("userImage");
+
+const zoom = document.getElementById("zoom");
+const posX = document.getElementById("posX");
+const posY = document.getElementById("posY");
+
+const zoomValue = document.getElementById("zoomValue");
+
+let imageLoaded = false;
+
+
+/* =========================================================
+   CHỌN ẢNH
+========================================================= */
+
+upload.addEventListener("change", function(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        alert("Vui lòng chọn một file ảnh!");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        userImage.src = e.target.result;
+
+        userImage.onload = function() {
+
+            imageLoaded = true;
+
+            zoom.value = 1;
+            posX.value = 0;
+            posY.value = 0;
+
+            updateImage();
+
+            userImage.style.display = "block";
+        };
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+/* =========================================================
+   CẬP NHẬT ẢNH
+========================================================= */
+
+function updateImage() {
+
+    if (!imageLoaded) return;
+
+    const scale = parseFloat(zoom.value);
+
+    const x = parseInt(posX.value);
+    const y = parseInt(posY.value);
+
+    /*
+       Ảnh được đặt ở chính giữa.
+       Sau đó cộng thêm x/y.
+    */
+
+    userImage.style.left =
+        `calc(50% + ${x}px)`;
+
+    userImage.style.top =
+        `calc(50% + ${y}px)`;
+
+    userImage.style.transform =
+        `translate(-50%, -50%) scale(${scale})`;
+
+    zoomValue.textContent =
+        Math.round(scale * 100) + "%";
+}
+
+
+/* =========================================================
+   THANH ĐIỀU KHIỂN
+========================================================= */
+
+zoom.addEventListener("input", updateImage);
+
+posX.addEventListener("input", updateImage);
+
+posY.addEventListener("input", updateImage);
+
+
+/* =========================================================
+   KÉO ẢNH BẰNG CHUỘT
+========================================================= */
+
+let dragging = false;
+
+let startMou
+```
