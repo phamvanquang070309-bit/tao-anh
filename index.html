@@ -13,53 +13,100 @@
         }
 
         body {
-            background-color: #f4f6f9;
+            background-color: #f0f4f8;
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            background-image: radial-gradient(#d0e1f9 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
+        /* Banner Header trường học */
         header {
             width: 100%;
-            background: linear-gradient(135deg, #004085, #007bff);
+            background: linear-gradient(135deg, #003366, #0056b3);
             color: #fff;
-            padding: 20px 0;
+            padding: 25px 15px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Trang trí hoa phượng / không gian trường học bằng SVG */
+        header::before, header::after {
+            content: "🌸";
+            position: absolute;
+            font-size: 2.5rem;
+            top: 10px;
+            opacity: 0.6;
+        }
+        header::before { left: 20px; }
+        header::after { right: 20px; }
 
         header h1 {
             font-size: 1.8rem;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         header p {
-            font-size: 1rem;
-            opacity: 0.9;
+            font-size: 1.05rem;
+            color: #e0e0e0;
         }
 
         .container {
-            max-width: 600px;
-            width: 90%;
-            margin: 30px auto;
-            background: #fff;
+            max-width: 550px;
+            width: 92%;
+            margin: 25px auto;
+            background: #ffffff;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             text-align: center;
+            border-top: 5px solid #0056b3;
         }
 
+        .school-badge-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .school-badge-title h2 {
+            font-size: 1.4rem;
+            color: #003366;
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            color: #555;
+            background: #eef6ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px dashed #b8daff;
+        }
+
+        /* Khung hiển thị Canvas */
         .canvas-wrapper {
             position: relative;
             width: 100%;
-            max-width: 450px;
-            margin: 20px auto;
-            border-radius: 8px;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            background-color: #eee;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #fff;
+            cursor: move; /* Con trỏ thể hiện di chuyển được */
+            touch-action: none; /* Tối ưu thao tác vuốt trên điện thoại */
         }
 
         canvas {
@@ -68,25 +115,60 @@
             display: block;
         }
 
+        /* Bảng điều khiển */
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             margin-top: 20px;
+        }
+
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .zoom-control label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .zoom-control input[type="range"] {
+            flex: 1;
+            max-width: 200px;
+            cursor: pointer;
         }
 
         input[type="file"] {
             display: none;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
         .btn {
-            padding: 12px 20px;
-            font-size: 1rem;
+            flex: 1;
+            padding: 12px 18px;
+            font-size: 0.95rem;
             font-weight: 600;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .btn-upload {
@@ -108,7 +190,8 @@
         }
 
         .btn:disabled {
-            background-color: #ccc;
+            background-color: #d6d6d6;
+            color: #888;
             cursor: not-allowed;
         }
 
@@ -116,7 +199,7 @@
             margin-top: auto;
             padding: 15px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #666;
         }
     </style>
@@ -125,27 +208,45 @@
 
     <header>
         <h1>TRƯỜNG THCS VÀ THPT ĐÔ LƯƠNG 4</h1>
-        <!-- Đã xóa dòng (2006 - 2026) theo yêu cầu -->
         <p>Chào mừng 20 năm thành lập trường</p>
     </header>
 
     <div class="container">
-        <h2>Tạo Ảnh Đại Diện Kỷ Niệm</h2>
-        <p style="margin-top: 8px; color: #666; font-size: 0.95rem;">Tải ảnh của bạn lên để ghép vào khung hình kỷ niệm</p>
+        <div class="school-badge-title">
+            <span>🎓</span>
+            <h2>Tạo Ảnh Đại Diện Kỷ Niệm</h2>
+        </div>
+        
+        <div class="instruction">
+            👉 <b>Mẹo:</b> Sau khi tải ảnh lên, bạn có thể <b>dùng chuột/tay kéo di chuyển</b> và dùng <b>thanh trượt</b> để phóng to/thu nhỏ ảnh vừa vặn.
+        </div>
 
-        <div class="canvas-wrapper">
+        <div class="canvas-wrapper" id="canvasWrapper">
             <canvas id="avatarCanvas" width="1000" height="1000"></canvas>
         </div>
 
         <div class="controls">
-            <input type="file" id="imageInput" accept="image/*">
-            <button class="btn btn-upload" onclick="document.getElementById('imageInput').click()">Tải ảnh của bạn lên</button>
-            <button class="btn btn-download" id="downloadBtn" disabled>Tải ảnh về máy</button>
+            <!-- Thanh Phóng to / Thu nhỏ -->
+            <div class="zoom-control">
+                <label for="zoomRange">🔍 Thu phóng:</label>
+                <input type="range" id="zoomRange" min="0.2" max="3" step="0.01" value="1" disabled>
+            </div>
+
+            <!-- Nút chức năng -->
+            <div class="btn-group">
+                <input type="file" id="imageInput" accept="image/*">
+                <button class="btn btn-upload" onclick="document.getElementById('imageInput').click()">
+                    📁 Chọn Ảnh Của Bạn
+                </button>
+                <button class="btn btn-download" id="downloadBtn" disabled>
+                    💾 Tải Ảnh Về Máy
+                </button>
+            </div>
         </div>
     </div>
 
     <footer>
-        &copy; 2026 Trường THCS & THPT Đô Lương 4. Gắn kết - Vươn xa.
+        🏫 <b>Trường THCS & THPT Đô Lương 4</b> | Gắn kết - Vươn xa
     </footer>
 
     <script>
@@ -153,17 +254,33 @@
         const ctx = canvas.getContext('2d');
         const imageInput = document.getElementById('imageInput');
         const downloadBtn = document.getElementById('downloadBtn');
+        const zoomRange = document.getElementById('zoomRange');
+        const canvasWrapper = document.getElementById('canvasWrapper');
 
-        // Điền chính xác tên file ảnh khung của bạn
+        // Tên file ảnh khung
         const frameImage = new Image();
         frameImage.src = '1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg';
 
         let userImage = null;
 
+        // Trạng thái điều chỉnh vị trí & kích thước ảnh người dùng
+        let imgX = 0;
+        let imgY = 0;
+        let imgScale = 1;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+
+        // Tọa độ vùng tròn caro ở tâm canvas
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2 - 10;
+        const radius = 310;
+
         frameImage.onload = () => {
             drawCanvas();
         };
 
+        // Khi người dùng chọn file ảnh
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -171,8 +288,22 @@
                 reader.onload = (event) => {
                     userImage = new Image();
                     userImage.onload = () => {
-                        drawCanvas();
+                        // Khởi tạo kích thước & vị trí mặc định cho ảnh vừa khung tròn
+                        const defaultScale = Math.max((radius * 2) / userImage.width, (radius * 2) / userImage.height);
+                        imgScale = defaultScale;
+                        
+                        // Đặt thanh zoom về giá trị tương ứng
+                        zoomRange.min = (defaultScale * 0.3).toFixed(2);
+                        zoomRange.max = (defaultScale * 3).toFixed(2);
+                        zoomRange.value = defaultScale;
+                        zoomRange.disabled = false;
+
+                        // Căn giữa ảnh
+                        imgX = centerX - (userImage.width * imgScale) / 2;
+                        imgY = centerY - (userImage.height * imgScale) / 2;
+
                         downloadBtn.disabled = false;
+                        drawCanvas();
                     };
                     userImage.src = event.target.result;
                 };
@@ -180,55 +311,22 @@
             }
         });
 
-        function drawCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Vẽ phông nền trắng
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // 2. Giới hạn vùng vẽ ảnh người dùng nằm gọn TRONG HÌNH TRÒN CARO
-            if (userImage) {
-                ctx.save();
-                
-                // Cấu hình tọa độ và bán kính vòng tròn ô caro
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2 - 10;
-                const radius = 310; // Bán kính vòng tròn ô caro
-
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.clip(); // Cắt ảnh chỉ cho phép hiển thị trong hình tròn
-
-                // Tự động căn chỉnh và căn giữa ảnh người dùng
-                const scale = Math.max((radius * 2) / userImage.width, (radius * 2) / userImage.height);
-                const imgW = userImage.width * scale;
-                const imgH = userImage.height * scale;
-                const imgX = centerX - imgW / 2;
-                const imgY = centerY - imgH / 2;
-
-                ctx.drawImage(userImage, imgX, imgY, imgW, imgH);
-                ctx.restore();
-            } else {
-                ctx.fillStyle = "#888888";
-                ctx.font = "28px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("Nhấn nút bên dưới để chọn ảnh", canvas.width / 2, canvas.height / 2);
-            }
-
-            // 3. Đè file ảnh khung lên phía trên
-            if (frameImage.complete) {
-                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-            }
+        // Xử lý Sự kiện Kéo (Drag & Drop) di chuyển ảnh bằng Chuột / Cảm ứng
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
         }
 
-        downloadBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'avatar-20-nam-truong.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    </script>
-</body>
-</html>
+        function startDrag(e) {
+            if (!userImage) return;
+            isDragging = true;
+            const pos = getPos(e);
+            startX = pos.x - imgX;
+            start
