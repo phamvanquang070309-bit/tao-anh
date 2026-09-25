@@ -1,303 +1,222 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghép ảnh</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Avatar Kỷ Niệm 20 Năm Thành Lập Trường</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #eee;
-    }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    canvas {
-        max-width: 90%;
-        border: 2px solid #333;
-        background: white;
-    }
+        header {
+            width: 100%;
+            background: linear-gradient(135deg, #004085, #007bff);
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    .controls {
-        margin: 15px auto;
-        padding: 15px;
-        background: white;
-        width: 90%;
-        max-width: 900px;
-        border-radius: 10px;
-    }
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
 
-    input {
-        width: 70px;
-        padding: 5px;
-        margin: 5px;
-    }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
 
-    button {
-        padding: 8px 15px;
-        margin: 5px;
-        cursor: pointer;
-    }
+        .container {
+            max-width: 600px;
+            width: 90%;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
 
-    label {
-        font-weight: bold;
-    }
-</style>
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            background-color: #eee;
+        }
 
+        canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-upload {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-upload:hover {
+            background-color: #218838;
+        }
+
+        .btn-download {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background-color: #0069d9;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>Ghép ảnh</h2>
+    <header>
+        <h1>TRƯỜNG THCS VÀ THPT ĐÔ LƯƠNG 4</h1>
+        <p>Chào mừng 20 năm thành lập trường (2006 - 2026)</p>
+    </header>
 
-<div class="controls">
+    <div class="container">
+        <h2>Tạo Ảnh Đại Diện Kỷ Niệm</h2>
+        <p style="margin-top: 8px; color: #666; font-size: 0.95rem;">Tải ảnh của bạn lên để ghép vào khung hình kỷ niệm</p>
 
-```
-<div>
-    <b>Chỉnh khung chứa người:</b><br>
+        <div class="canvas-wrapper">
+            <canvas id="avatarCanvas" width="800" height="800"></canvas>
+        </div>
 
-    <label>X:</label>
-    <input type="number" id="frameX" value="300">
+        <div class="controls">
+            <input type="file" id="imageInput" accept="image/*">
+            <button class="btn btn-upload" onclick="document.getElementById('imageInput').click()">Tải ảnh của bạn lên</button>
+            <button class="btn btn-download" id="downloadBtn" disabled>Tải ảnh về máy</button>
+        </div>
+    </div>
 
-    <label>Y:</label>
-    <input type="number" id="frameY" value="150">
+    <footer>
+        &copy; 2026 Trường THCS & THPT Đô Lương 4. Gắn kết - Vươn xa.
+    </footer>
 
-    <label>Rộng:</label>
-    <input type="number" id="frameW" value="300">
+    <script>
+        const canvas = document.getElementById('avatarCanvas');
+        const ctx = canvas.getContext('2d');
+        const imageInput = document.getElementById('imageInput');
+        const downloadBtn = document.getElementById('downloadBtn');
 
-    <label>Cao:</label>
-    <input type="number" id="frameH" value="300">
+        // Khởi tạo ảnh khung
+        const frameImage = new Image();
+        frameImage.src = 'frame.png'; // Tên file ảnh khung (cùng thư mục)
 
-    <button onclick="updateFrame()">Cập nhật khung</button>
-</div>
+        let userImage = null;
 
-<hr>
-
-<input type="file" id="personInput" accept="image/*">
-
-<br>
-
-<button onclick="resetPerson()">Đặt lại người</button>
-<button onclick="zoomIn()">Phóng to</button>
-<button onclick="zoomOut()">Thu nhỏ</button>
-<button onclick="rotateLeft()">Xoay trái</button>
-<button onclick="rotateRight()">Xoay phải</button>
-<button onclick="downloadImage()">Tải ảnh</button>
-```
-
-</div>
-
-<canvas id="canvas" width="900" height="600"></canvas>
-
-<script>
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-// ===============================
-// ẢNH NỀN
-// ===============================
-
-const background = new Image();
-
-background.src =
-"1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg";
-
-
-// ===============================
-// KHUNG CHỨA NGƯỜI
-// ===============================
-
-let frame = {
-    x: 300,
-    y: 150,
-    width: 300,
-    height: 300
-};
-
-
-// ===============================
-// ẢNH NGƯỜI
-// ===============================
-
-const person = new Image();
-
-let personData = {
-    x: 450,
-    y: 300,
-    scale: 0.3,
-    rotation: 0
-};
-
-
-// ===============================
-// VẼ ẢNH
-// ===============================
-
-function draw() {
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Vẽ nền
-    ctx.drawImage(
-        background,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    // Vẽ người
-    if (person.src) {
-
-        const w = person.naturalWidth * personData.scale;
-        const h = person.naturalHeight * personData.scale;
-
-        ctx.save();
-
-        ctx.translate(
-            personData.x,
-            personData.y
-        );
-
-        ctx.rotate(personData.rotation);
-
-        ctx.drawImage(
-            person,
-            -w / 2,
-            -h / 2,
-            w,
-            h
-        );
-
-        ctx.restore();
-    }
-
-
-    // Vẽ khung để dễ chỉnh
-    ctx.save();
-
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 3;
-    ctx.setLineDash([10, 5]);
-
-    ctx.strokeRect(
-        frame.x,
-        frame.y,
-        frame.width,
-        frame.height
-    );
-
-    ctx.restore();
-}
-
-
-// ===============================
-// CHỌN ẢNH NGƯỜI
-// ===============================
-
-document.getElementById("personInput").addEventListener(
-    "change",
-    function(event) {
-
-        const file = event.target.files[0];
-
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-
-            person.onload = function() {
-
-                personData.x =
-                    frame.x + frame.width / 2;
-
-                personData.y =
-                    frame.y + frame.height / 2;
-
-                personData.scale = 0.3;
-                personData.rotation = 0;
-
-                draw();
-            };
-
-            person.src = e.target.result;
+        // Vẽ khung mặc định khi trang web tải xong
+        frameImage.onload = () => {
+            drawCanvas();
         };
 
-        reader.readAsDataURL(file);
-    }
-);
+        // Xử lý khi người dùng chọn ảnh
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    userImage = new Image();
+                    userImage.onload = () => {
+                        drawCanvas();
+                        downloadBtn.disabled = false;
+                    };
+                    userImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
+        // Hàm vẽ canvas
+        function drawCanvas() {
+            // Xóa canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// ===============================
-// TỰ CHỈNH KHUNG
-// ===============================
+            // 1. Vẽ ảnh người dùng bên dưới (nếu có)
+            if (userImage) {
+                // Tự động căn chỉnh & crop ảnh người dùng vừa với kích thước canvas (Square Cover)
+                const scale = Math.max(canvas.width / userImage.width, canvas.height / userImage.height);
+                const x = (canvas.width / 2) - (userImage.width / 2) * scale;
+                const y = (canvas.height / 2) - (userImage.height / 2) * scale;
+                
+                ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
+            } else {
+                // Phông nền mặc định khi chưa chọn ảnh
+            ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#aaaaaa";
+                ctx.font = "24px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("Vui lòng chọn ảnh của bạn", canvas.width / 2, canvas.height / 2);
+            }
 
-function updateFrame() {
+            // 2. Vẽ ảnh khung đè lên trên
+            if (frameImage.complete) {
+                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+            }
+        }
 
-    frame.x =
-        Number(document.getElementById("frameX").value);
-
-    frame.y =
-        Number(document.getElementById("frameY").value);
-
-    frame.width =
-        Number(document.getElementById("frameW").value);
-
-    frame.height =
-        Number(document.getElementById("frameH").value);
-
-    // Đưa người vào giữa khung
-    personData.x =
-        frame.x + frame.width / 2;
-
-    personData.y =
-        frame.y + frame.height / 2;
-
-    draw();
-}
-
-
-// ===============================
-// KÉO NGƯỜI
-// ===============================
-
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
-
-canvas.addEventListener("mousedown", function(e) {
-
-    if (!person.src) return;
-
-    const rect = canvas.getBoundingClientRect();
-
-    const mouseX =
-        (e.clientX - rect.left)
-        * canvas.width / rect.width;
-
-    const mouseY =
-        (e.clientY - rect.top)
-        * canvas.height / rect.height;
-
-    dragging = true;
-
-    offsetX =
-        mouseX - personData.x;
-
-    offsetY =
-        mouseY - personData.y;
-});
-
-
-canvas.addEventListener("mousemove", function(e) {
-
-    if (!dragging) return;
-
-    const rect = canvas.getBoundingClientRect();
-
-    const mouseX =
-        (e.client
+        // Tải ảnh đã ghép về máy
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'avatar-20-nam-do-luong-4.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+</html>
