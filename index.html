@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo ảnh</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        canvas {
+            max-width: 90%;
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Tạo ảnh của bạn</h2>
+
+<input type="file" id="upload" accept="image/*">
+
+<br>
+
+<canvas id="canvas"></canvas>
+
+<br>
+
+<button id="download">Tải ảnh xuống</button>
+
+<script>
+const upload = document.getElementById("upload");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const download = document.getElementById("download");
+
+const background = new Image();
+background.src = "background.png";
+
+upload.addEventListener("change", function () {
+
+    const file = upload.files[0];
+
+    if (!file) return;
+
+    const userImage = new Image();
+
+    userImage.onload = function () {
+
+        canvas.width = background.width;
+        canvas.height = background.height;
+
+        ctx.drawImage(
+            background,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        const x = 300;
+        const y = 200;
+        const width = 400;
+        const height = 400;
+
+        ctx.drawImage(
+            userImage,
+            x,
+            y,
+            width,
+            height
+        );
+    };
+
+    userImage.src = URL.createObjectURL(file);
+});
+
+download.addEventListener("click", function () {
+
+    const link = document.createElement("a");
+
+    link.download = "anh-cua-toi.png";
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
+});
+</script>
+
+</body>
+</html>
 
