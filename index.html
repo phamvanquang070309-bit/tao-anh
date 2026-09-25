@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -108,6 +107,11 @@
 </head>
 <body class="flex flex-col items-center justify-between p-3 md:p-6 relative">
 
+    <!-- Nút Bật/Tắt Âm Nhạc Nổi -->
+    <button id="musicToggleBtn" class="fixed top-4 right-4 z-50 bg-gradient-to-r from-amber-400 to-yellow-500 text-red-950 w-12 h-12 rounded-full border-2 border-white shadow-2xl flex items-center justify-center text-xl transition transform hover:scale-110 active:scale-95">
+        <i id="musicIcon" class="fa-solid fa-music"></i>
+    </button>
+
     <!-- Canvas hạt ánh kim lấp lánh hiệu ứng 3D -->
     <canvas id="particleCanvas"></canvas>
 
@@ -121,7 +125,7 @@
             <i class="fa-solid fa-crown text-amber-900"></i>
         </div>
 
-        <!-- Tên Trường Sắc Nét 100% -->
+        <!-- Tên Trường Sắc Nét -->
         <div class="royal-badge py-3.5 px-4 md:px-8 rounded-2xl my-2 transform transition duration-300 hover:scale-[1.02]">
             <h1 class="school-title text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight">
                 TRƯỜNG THCS & THPT ĐÔ LƯƠNG 4
@@ -130,7 +134,7 @@
 
         <!-- Khẩu Hiệu -->
         <p class="gold-glow-text text-sm md:text-base font-extrabold italic mt-2 tracking-wider">
-            ✨ "GẮN KẾT - VƯƠN XA" • TẠO AVATAR CÁ NHÂN ĐẲNG CẤP ✨
+            ✨ "GẮN KẾT - VƯƠN XA" ✨
         </p>
     </header>
 
@@ -153,7 +157,7 @@
             </div>
         </div>
 
-        <!-- Bảng Bàn Phím Điều Khiển -->
+        <!-- Bảng Điều Khiển -->
         <div class="w-full mt-4 space-y-3.5">
             
             <!-- Nút Tải Ảnh Cá Nhân -->
@@ -229,10 +233,82 @@
         © 2006 - 2026 Trường THCS & THPT Đô Lương 4. Tự hào 20 năm phát triển.
     </footer>
 
-    <!-- Script Xử Lý Toàn Bộ Lực Lượng -->
+    <!-- Script Xử Lý Toàn Bộ -->
     <script>
         /* -------------------------------------------------------------
-           1. HỆ THỐNG NỀN HIỆU ỨNG HẠT VÀNG NHƯ SÂN SÂN LỄ HỘI 3D
+           1. HỆ THỐNG ÂM NHẠC LỄ HỘI LẠP TRÌNH BẰNG WEB AUDIO API
+        ------------------------------------------------------------- */
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicInterval = null;
+
+        const musicToggleBtn = document.getElementById('musicToggleBtn');
+        const musicIcon = document.getElementById('musicIcon');
+
+        // Giai điệu khúc ca mừng lễ hội
+        const melody = [
+            { note: 523.25, duration: 0.3 }, // C5
+            { note: 659.25, duration: 0.3 }, // E5
+            { note: 783.99, duration: 0.3 }, // G5
+            { note: 1046.50, duration: 0.6 }, // C6
+            { note: 880.00, duration: 0.3 }, // A5
+            { note: 1046.50, duration: 0.6 } // C6
+        ];
+
+        function playNextNote() {
+            if (!isMusicPlaying) return;
+            let noteIndex = 0;
+            musicInterval = setInterval(() => {
+                if (!isMusicPlaying) {
+                    clearInterval(musicInterval);
+                    return;
+                }
+                const current = melody[noteIndex % melody.length];
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(current.note, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + current.duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + current.duration);
+                } catch(e) {}
+                noteIndex++;
+            }, 450);
+        }
+
+        function toggleMusic() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isMusicPlaying = !isMusicPlaying;
+            if (isMusicPlaying) {
+                musicIcon.className = 'fa-solid fa-volume-high text-red-950 animate-bounce';
+                playNextNote();
+            } else {
+                musicIcon.className = 'fa-solid fa-volume-xmark text-red-950';
+                clearInterval(musicInterval);
+            }
+        }
+
+        musicToggleBtn.addEventListener('click', toggleMusic);
+        // Tự kích hoạt âm thanh khi người dùng chạm bất kỳ đâu trên trình duyệt
+        window.addEventListener('click', () => {
+            if (!audioCtx && !isMusicPlaying) {
+                toggleMusic();
+            }
+        }, { once: true });
+
+
+        /* -------------------------------------------------------------
+           2. NỀN HIỆU ỨNG HẠT VÀNG NHƯ SÂN SÂN LỄ HỘI 3D
         ------------------------------------------------------------- */
         const pCanvas = document.getElementById('particleCanvas');
         const pCtx = pCanvas.getContext('2d');
@@ -289,33 +365,6 @@
 
 
         /* -------------------------------------------------------------
-           2. HỆ THỐNG ÂM THANH MỪNG LỄ HỘI (Web Audio API)
-        ------------------------------------------------------------- */
-        function playCelebrationSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const now = audioCtx.currentTime;
-                
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now); // C5
-                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.4); // C6
-                
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start(now);
-                osc.stop(now + 0.5);
-            } catch(e) {}
-        }
-
-
-        /* -------------------------------------------------------------
            3. LÕI GHÉP CẮT ẢNH CHUẨN XÁC 100% CỦA CANVAS
         ------------------------------------------------------------- */
         const canvas = document.getElementById('avatarCanvas');
@@ -329,7 +378,6 @@
         const uploadPlaceholder = document.getElementById('uploadPlaceholder');
         const fbPreviewImg = document.getElementById('fbPreviewImg');
 
-        // Khung ảnh cố định trùng tên frame.png
         const frameImage = new Image();
         frameImage.src = 'frame.png';
 
@@ -341,45 +389,36 @@
         let isDragging = false;
         let startX, startY;
 
-        // Render Canvas cắt khít 100% viền đỏ
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            
-            // Tỷ lệ bán kính 0.448 xén vừa khít bên trong viền đỏ ngoài cùng của logo
             const radius = canvas.width * 0.448; 
 
-            // 1. Vẽ Ảnh Cá Nhân (Mặt nạ cắt tròn)
             if (userImage) {
                 ctx.save();
-                
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.clip(); // Xén vừa vặn không thò góc thừa ra ngoài
+                ctx.clip();
 
                 ctx.translate(imgX, imgY);
                 ctx.rotate((imgRotation * Math.PI) / 180);
                 ctx.scale(imgScale, imgScale);
                 ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
-                
                 ctx.restore();
             }
 
-            // 2. Vẽ Khung Logo (frame.png) đè lên trên cùng
             if (frameImage.complete && frameImage.naturalWidth !== 0) {
                 ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
             }
 
-            // Cập nhật giao diện xem trước Facebook
             fbPreviewImg.src = canvas.toDataURL('image/png');
         }
 
         frameImage.onload = render;
 
-        // Xử lý khi tải ảnh người dùng lên
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -413,19 +452,16 @@
             reader.readAsDataURL(file);
         });
 
-        // Điều chỉnh Zoom Slider
         zoomRange.addEventListener('input', (e) => {
             imgScale = parseFloat(e.target.value);
             render();
         });
 
-        // Điều chỉnh Xoay Slider
         rotateRange.addEventListener('input', (e) => {
             imgRotation = parseInt(e.target.value);
             render();
         });
 
-        // Lăn chuột để Phóng to/Thu nhỏ
         canvas.addEventListener('wheel', (e) => {
             if (!userImage) return;
             e.preventDefault();
@@ -435,7 +471,6 @@
             render();
         }, { passive: false });
 
-        // Căn Giữa & Đặt Lại
         centerBtn.addEventListener('click', () => {
             imgX = canvas.width / 2;
             imgY = canvas.height / 2;
@@ -455,7 +490,6 @@
             render();
         });
 
-        // Thao tác Kéo Dịch Chuyển Ảnh
         function getCanvasPos(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -495,31 +529,28 @@
         canvas.addEventListener('touchmove', handleMove);
         window.addEventListener('touchend', handleEnd);
 
-        // Nút Tải Ảnh Về
+        // Nút Tải Ảnh Về Bắn Pháo Hoa Hoành Tráng
         downloadBtn.addEventListener('click', () => {
-            playCelebrationSound();
-
-            // Hiệu ứng pháo hoa bắn từ 2 bên màn hình
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 120,
+                spread: 80,
                 origin: { y: 0.6 }
             });
 
             setTimeout(() => {
                 confetti({
-                    particleCount: 50,
+                    particleCount: 60,
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 }
                 });
                 confetti({
-                    particleCount: 50,
+                    particleCount: 60,
                     angle: 120,
                     spread: 55,
                     origin: { x: 1 }
                 });
-            }, 250);
+            }, 200);
 
             const link = document.createElement('a');
             link.download = 'avatar-20nam-doluong4.png';
