@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -62,7 +63,7 @@
         <div class="canvas-container relative w-full aspect-square rounded-full overflow-hidden shadow-2xl border-4 border-yellow-400/80 bg-slate-900 group">
             <canvas id="avatarCanvas" width="1200" height="1200" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
             
-            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 text-white p-6 text-center transition-opacity duration-300">
+            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 text-white p-6 text-center transition-opacity duration-300 pointer-events-none">
                 <i class="fa-solid md:fa-4x fa-cloud-arrow-up text-4xl text-yellow-400 mb-3 animate-bounce"></i>
                 <p class="font-bold text-base md:text-lg">Tải ảnh cá nhân của bạn lên</p>
                 <p class="text-xs text-slate-300 mt-1">Dễ dàng xoay, kéo, phóng to thu nhỏ vừa khung</p>
@@ -147,21 +148,34 @@
         let isDragging = false;
         let startX, startY;
 
-        // Render Canvas
+        // Render Canvas chuẩn tỉ lệ hình tròn Facebook
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Draw User Photo Layer
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2; // Bán kính hình tròn vừa khít viền 1:1
+
+            // 1. Vẽ Ảnh Người Dùng (Sử dụng Mặt nạ cắt hình tròn - Clipping Mask)
             if (userImage) {
                 ctx.save();
+                
+                // Tạo vùng cắt hình tròn chuẩn Facebook
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip(); // Tất cả nét vẽ sau lệnh này sẽ bị xén gọn trong hình tròn
+
+                // Tọa độ và xoay ảnh
                 ctx.translate(imgX, imgY);
                 ctx.rotate((imgRotation * Math.PI) / 180);
                 ctx.scale(imgScale, imgScale);
                 ctx.drawImage(userImage, -userImage.width / 2, -userImage.height / 2);
-                ctx.restore();
+                
+                ctx.restore(); // Khôi phục vùng vẽ bình thường
             }
 
-            // 2. Draw Frame Overlay Layer
+            // 2. Vẽ Khung Logo (frame.png) đè lên trên cùng
             if (frameImage.complete && frameImage.naturalWidth !== 0) {
                 ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
             }
@@ -178,7 +192,7 @@
             reader.onload = (event) => {
                 userImage = new Image();
                 userImage.onload = () => {
-                    uploadPlaceholder.classList.add('opacity-0', 'pointer-events-none');
+                    uploadPlaceholder.classList.add('opacity-0');
                     
                     // Default Fitting & Position
                     imgX = canvas.width / 2;
