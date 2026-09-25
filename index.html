@@ -3,122 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Avatar Kỷ Niệm 20 Năm Thành Lập Trường</title>
+    <title>Tạo Ảnh Kỷ Niệm 20 Năm - THCS & THPT Đô Lương 4</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f0f4f8; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { width: 100%; background: linear-gradient(135deg, #003366, #0056b3); color: #fff; padding: 20px 15px; text-align: center; }
-        header h1 { font-size: 1.6rem; margin-bottom: 5px; }
-        .container { max-width: 500px; width: 92%; margin: 20px auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
-        .canvas-wrapper { position: relative; width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; background: #eef2f5; cursor: move; touch-action: none; border: 2px dashed #0056b3; }
-        canvas { width: 100%; height: auto; display: block; }
-        .controls { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
-        .zoom-control { display: flex; align-items: center; justify-content: center; gap: 10px; background: #f8f9fa; padding: 8px; border-radius: 6px; border: 1px solid #ddd; }
-        input[type="file"] { display: none; }
-        .btn-group { display: flex; gap: 10px; justify-content: center; }
-        .btn { flex: 1; padding: 12px; font-size: 0.95rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-        .btn-upload { background-color: #28a745; color: white; }
-        .btn-download { background-color: #007bff; color: white; }
-        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #b71c1c;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #eee;
+            touch-action: none;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            cursor: move;
+        }
+
+        .controls {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-upload {
+            background-color: #1976d2;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-upload:hover {
+            background-color: #1565c0;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .zoom-control input {
+            flex: 1;
+        }
+
+        .btn-download {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-download:hover {
+            background-color: #1b5e20;
+        }
+
+        .instructions {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>TRƯỜNG THCS VÀ THPT ĐÔ LƯƠNG 4</h1>
-        <p>Chào mừng 20 năm thành lập trường</p>
-    </header>
+    <div class="header">
+        <h1>THCS & THPT ĐÔ LƯƠNG 4</h1>
+        <p>Tạo avatar kỷ niệm 20 năm thành lập (2006 - 2026)</p>
+    </div>
 
     <div class="container">
-        <h3 style="color: #003366; margin-bottom: 10px;">🎓 Tạo Ảnh Đại Diện Kỷ Niệm</h3>
-
-        <div class="canvas-wrapper" id="canvasWrapper">
-            <canvas id="avatarCanvas" width="1000" height="1000"></canvas>
+        <div class="canvas-wrapper">
+            <canvas id="avatarCanvas" width="800" height="800"></canvas>
         </div>
 
         <div class="controls">
+            <label class="btn-upload" for="imageInput">
+                📸 Chọn ảnh cá nhân
+            </label>
+            <input type="file" id="imageInput" accept="image/*">
+
             <div class="zoom-control">
-                <label for="zoomRange">🔍 Phóng to / Thu nhỏ:</label>
-                <input type="range" id="zoomRange" min="0.2" max="3" step="0.01" value="1" disabled>
+                <span>🔍 Phóng to/Thu nhỏ:</span>
+                <input type="range" id="zoomRange" min="0.2" max="3" step="0.05" value="1" disabled>
             </div>
 
-            <div class="btn-group">
-                <input type="file" id="imageInput" accept="image/*">
-                <button class="btn btn-upload" onclick="document.getElementById('imageInput').click()">📁 Chọn Ảnh Của Bạn</button>
-                <button class="btn btn-download" id="downloadBtn" disabled>💾 Tải Ảnh Về</button>
-            </div>
+            <button class="btn-download" id="downloadBtn" disabled>💾 Tải ảnh về máy</button>
         </div>
+
+        <p class="instructions">Mẹo: Kéo thả trực tiếp trên hình để điều chỉnh vị trí ảnh cá nhân.</p>
     </div>
 
     <script>
         const canvas = document.getElementById('avatarCanvas');
         const ctx = canvas.getContext('2d');
         const imageInput = document.getElementById('imageInput');
-        const downloadBtn = document.getElementById('downloadBtn');
         const zoomRange = document.getElementById('zoomRange');
-        const canvasWrapper = document.getElementById('canvasWrapper');
+        const downloadBtn = document.getElementById('downloadBtn');
 
-        // Tự động dùng file JPG sẵn có trên GitHub của bạn
-        const FRAME_URL = '1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg';
-
-        const rawFrame = new Image();
-        rawFrame.crossOrigin = "Anonymous";
-        rawFrame.src = FRAME_URL;
-
-        let processedFrameCanvas = document.createElement('canvas');
-        processedFrameCanvas.width = 1000;
-        processedFrameCanvas.height = 1000;
-        let pCtx = processedFrameCanvas.getContext('2d');
-        let frameReady = false;
+        // Nối trực tiếp tới file frame.png trong cùng thư mục
+        const frameImage = new Image();
+        frameImage.src = 'frame.png';
 
         let userImage = null;
-        let imgX = 0, imgY = 0, imgScale = 1;
-        let isDragging = false, startX = 0, startY = 0;
+        let imgX = canvas.width / 2;
+        let imgY = canvas.height / 2;
+        let imgScale = 1;
+        let isDragging = false;
+        let startX, startY;
 
-        const centerX = 500;
-        const centerY = 490;
-        const radius = 310;
+        // Vẽ canvas
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // TỰ ĐỘNG ĐỤC LỖ BẰNG CODE KHI KHUNG TẢI XONG
-        rawFrame.onload = () => {
-            pCtx.drawImage(rawFrame, 0, 0, 1000, 1000);
-            pCtx.globalCompositeOperation = 'destination-out';
-            pCtx.beginPath();
-            pCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            pCtx.fill();
-            pCtx.globalCompositeOperation = 'source-over';
-            
-            frameReady = true;
-            drawCanvas();
-        };
+            // 1. Vẽ ảnh người dùng (nằm ở lớp dưới)
+            if (userImage) {
+                ctx.save();
+                ctx.translate(imgX, imgY);
+                ctx.scale(imgScale, imgScale);
+                ctx.drawImage(
+                    userImage, 
+                    -userImage.width / 2, 
+                    -userImage.height / 2
+                );
+                ctx.restore();
+            }
 
+            // 2. Vẽ khung logo kỷ niệm (đè lên trên)
+            if (frameImage.complete && frameImage.naturalWidth !== 0) {
+                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        frameImage.onload = draw;
+
+        // Tải ảnh cá nhân lên
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    userImage = new Image();
-                    userImage.onload = () => {
-                        const defaultScale = Math.max((radius * 2) / userImage.width, (radius * 2) / userImage.height);
-                        imgScale = defaultScale;
-                        
-                        zoomRange.min = (defaultScale * 0.3).toFixed(2);
-                        zoomRange.max = (defaultScale * 3).toFixed(2);
-                        zoomRange.value = defaultScale;
-                        zoomRange.disabled = false;
+            if (!file) return;
 
-                        imgX = centerX - (userImage.width * imgScale) / 2;
-                        imgY = centerY - (userImage.height * imgScale) / 2;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                userImage = new Image();
+                userImage.onload = () => {
+                    imgX = canvas.width / 2;
+                    imgY = canvas.height / 2;
+                    
+                    const scaleX = canvas.width / userImage.width;
+                    const scaleY = canvas.height / userImage.height;
+                    imgScale = Math.max(scaleX, scaleY);
+                    
+                    zoomRange.value = imgScale;
+                    zoomRange.disabled = false;
+                    downloadBtn.disabled = false;
 
-                        downloadBtn.disabled = false;
-                        drawCanvas();
-                    };
-                    userImage.src = event.target.result;
+                    draw();
                 };
-                reader.readAsDataURL(file);
-            }
+                userImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         });
 
+        // Điều chỉnh zoom
+        zoomRange.addEventListener('input', (e) => {
+            imgScale = parseFloat(e.target.value);
+            draw();
+        });
+
+        // Xử lý di chuyển ảnh
         function getPos(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -129,83 +246,39 @@
             };
         }
 
-        canvasWrapper.addEventListener('mousedown', (e) => {
+        function startMove(e) {
             if (!userImage) return;
             isDragging = true;
             const pos = getPos(e);
             startX = pos.x - imgX;
             startY = pos.y - imgY;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging || !userImage) return;
-            const pos = getPos(e);
-            imgX = pos.x - startX;
-            imgY = pos.y - startY;
-            drawCanvas();
-        });
-
-        window.addEventListener('mouseup', () => { isDragging = false; });
-
-        canvasWrapper.addEventListener('touchstart', (e) => {
-            if (!userImage) return;
-            isDragging = true;
-            const pos = getPos(e);
-            startX = pos.x - imgX;
-            startY = pos.y - imgY;
-        }, { passive: false });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging || !userImage) return;
-            const pos = getPos(e);
-            imgX = pos.x - startX;
-            imgY = pos.y - startY;
-            drawCanvas();
-        }, { passive: false });
-
-        window.addEventListener('touchend', () => { isDragging = false; });
-
-        zoomRange.addEventListener('input', (e) => {
-            if (!userImage) return;
-            const newScale = parseFloat(e.target.value);
-            const currentCenterX = imgX + (userImage.width * imgScale) / 2;
-            const currentCenterY = imgY + (userImage.height * imgScale) / 2;
-
-            imgScale = newScale;
-            imgX = currentCenterX - (userImage.width * imgScale) / 2;
-            imgY = currentCenterY - (userImage.height * imgScale) / 2;
-
-            drawCanvas();
-        });
-
-        function drawCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Vẽ ảnh người dùng bên dưới
-            if (userImage) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(userImage, imgX, imgY, userImage.width * imgScale, userImage.height * imgScale);
-                ctx.restore();
-            } else {
-                ctx.fillStyle = "#0056b3";
-                ctx.font = "bold 32px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("Bấm chọn ảnh bên dưới để tải lên", canvas.width / 2, canvas.height / 2);
-            }
-
-            // 2. Phủ khung ảnh đã đục lỗ tự động lên trên
-            if (frameReady) {
-                ctx.drawImage(processedFrameCanvas, 0, 0, canvas.width, canvas.height);
-            }
         }
 
+        function move(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            imgX = pos.x - startX;
+            imgY = pos.y - startY;
+            draw();
+        }
+
+        function stopMove() {
+            isDragging = false;
+        }
+
+        canvas.addEventListener('mousedown', startMove);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', stopMove);
+
+        canvas.addEventListener('touchstart', startMove);
+        canvas.addEventListener('touchmove', move);
+        window.addEventListener('touchend', stopMove);
+
+        // Tải xuống kết quả
         downloadBtn.addEventListener('click', () => {
             const link = document.createElement('a');
-            link.download = 'avatar-do-luong-4.png';
+            link.download = 'avatar-ky-niem-doluong4.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
