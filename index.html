@@ -154,9 +154,9 @@
         const imageInput = document.getElementById('imageInput');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        // Tải file khung
+        // Điền chính xác tên file ảnh khung của bạn
         const frameImage = new Image();
-        frameImage.src = 'frame.png'; // Lưu ý: Cần lưu file khung PNG trong suốt ở cùng thư mục
+        frameImage.src = '1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg';
 
         let userImage = null;
 
@@ -183,25 +183,25 @@
         function drawCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Vẽ nền trắng phía sau
+            // 1. Vẽ phông nền trắng
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Vẽ ảnh người dùng CẮT TRÒN đúng phạm vi khung caro ở tâm
+            // 2. Giới hạn vùng vẽ ảnh người dùng nằm gọn TRONG HÌNH TRÒN CARO
             if (userImage) {
                 ctx.save();
                 
-                // Tạo vùng cắt hình tròn khớp với khung caro ở tâm canvas
+                // Cấu hình tọa độ và bán kính vòng tròn ô caro
                 const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2 - 10; // Căn chỉnh tâm hơi xê dịch nhẹ lên trên
-                const radius = 310; // Bán kính đường tròn chứa ảnh caro
+                const centerY = canvas.height / 2 - 10;
+                const radius = 310; // Bán kính vòng tròn ô caro
 
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.clip(); // Giới hạn ảnh vẽ chỉ xuất hiện bên trong hình tròn này
+                ctx.clip(); // Cắt ảnh chỉ cho phép hiển thị trong hình tròn
 
-                // Căn chỉnh quy mô ảnh người dùng
+                // Tự động căn chỉnh và căn giữa ảnh người dùng
                 const scale = Math.max((radius * 2) / userImage.width, (radius * 2) / userImage.height);
                 const imgW = userImage.width * scale;
                 const imgH = userImage.height * scale;
@@ -217,7 +217,7 @@
                 ctx.fillText("Nhấn nút bên dưới để chọn ảnh", canvas.width / 2, canvas.height / 2);
             }
 
-            // 3. Đè khung hình PNG lên trên cùng
+            // 3. Đè file ảnh khung lên phía trên
             if (frameImage.complete) {
                 ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
             }
