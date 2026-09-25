@@ -15,15 +15,14 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            color: #222;
+            background: #f1f1f1;
         }
 
         header {
             background: #222;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 20px 10px;
         }
 
         header h1 {
@@ -36,44 +35,120 @@
         }
 
         .container {
+            width: 95%;
             max-width: 1000px;
             margin: 25px auto;
-            padding: 0 15px;
         }
 
-        .upload {
+        .box {
             background: white;
             padding: 20px;
             border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .upload {
             text-align: center;
             margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
 
-        .upload label {
+        .upload-button {
             display: inline-block;
+            padding: 13px 22px;
             background: #222;
             color: white;
-            padding: 13px 22px;
             border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        .upload label:hover {
-            opacity: 0.85;
+        .upload-button:hover {
+            background: #444;
         }
 
         #personInput {
             display: none;
         }
 
-        .editor {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        #canvas {
+            display: block;
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            margin: auto;
+            background: #ddd;
+            border-radius: 10px;
+
+            /*
+             * Rất quan trọng:
+             * Cho phép kéo ảnh trên điện thoại.
+             */
+            touch-action: none;
+
+            cursor: grab;
         }
 
-        canv
-```
+        #canvas:active {
+            cursor: grabbing;
+        }
 
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 15px;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .download {
+            background: #16803c;
+        }
+
+        .reset {
+            background: #c62828;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .tools button {
+                flex: 1 1 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>📸 Ghép ảnh</h1>
+    <p>Chọn ảnh của bạn để ghép vào phông nền</p>
+</header>
+
+
+<div class="container">
+
+    <div class="box">
+
+        <!-- ============================= -->
+        <!-- CHỌN ẢNH NGƯỜI -->
+        <
+```
