@@ -329,4 +329,89 @@
             isDragging = true;
             const pos = getPos(e);
             startX = pos.x - imgX;
-            start
+            startY = pos.y - imgY;
+        }
+
+        function moveDrag(e) {
+            if (!isDragging || !userImage) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            imgX = pos.x - startX;
+            imgY = pos.y - startY;
+            drawCanvas();
+        }
+
+        function stopDrag() {
+            isDragging = false;
+        }
+
+        // Đăng ký sự kiện kéo thả cho chuột & màn hình cảm ứng
+        canvasWrapper.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', moveDrag);
+        window.addEventListener('mouseup', stopDrag);
+
+        canvasWrapper.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('touchmove', moveDrag, { passive: false });
+        window.addEventListener('touchend', stopDrag);
+
+        // Thay đổi Zoom bằng thanh trượt
+        zoomRange.addEventListener('input', (e) => {
+            if (!userImage) return;
+            const newScale = parseFloat(e.target.value);
+            
+            // Giữ tâm ảnh không bị lệch khi zoom
+            const currentCenterX = imgX + (userImage.width * imgScale) / 2;
+            const currentCenterY = imgY + (userImage.height * imgScale) / 2;
+
+            imgScale = newScale;
+            imgX = currentCenterX - (userImage.width * imgScale) / 2;
+            imgY = currentCenterY - (userImage.height * imgScale) / 2;
+
+            drawCanvas();
+        });
+
+        // Hàm vẽ Canvas chính
+        function drawCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Phông nền trắng
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Vẽ ảnh người dùng đã di chuyển & cắt tròn đúng phông ô caro
+            if (userImage) {
+                ctx.save();
+                
+                // Cắt vùng hiển thị hình tròn ô caro
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip();
+
+                // Vẽ ảnh người dùng theo vị trí kéo & tỉ lệ zoom
+                ctx.drawImage(userImage, imgX, imgY, userImage.width * imgScale, userImage.height * imgScale);
+                
+                ctx.restore();
+            } else {
+                ctx.fillStyle = "#888888";
+                ctx.font = "28px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText("Nhấn nút chọn ảnh để tải ảnh lên", canvas.width / 2, canvas.height / 2);
+            }
+
+            // 3. Vẽ đè khung viền lên phía trên
+            if (frameImage.complete) {
+                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Tải ảnh ghép về máy
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'avatar-ky-niem-truong.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+</html>
