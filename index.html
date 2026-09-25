@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -150,5 +150,936 @@
 
         <!-- ============================= -->
         <!-- CHỌN ẢNH NGƯỜI -->
-        <
-```
+        <!-- ============================= -->
+
+        <div class="upload">
+
+            <label
+                for="personInput"
+                class="upload-button"
+            >
+                👤 Chọn ảnh của bạn
+            </label>
+
+            <input
+                type="file"
+                id="personInput"
+                accept="image/*"
+            >
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- CANVAS -->
+        <!-- ============================= -->
+
+        <canvas
+            id="canvas"
+            width="900"
+            height="600">
+        </canvas>
+
+
+        <!-- ============================= -->
+        <!-- CÁC NÚT -->
+        <!-- ============================= -->
+
+        <div class="tools">
+
+            <button onclick="moveUp()">
+                ⬆️ Lên
+            </button>
+
+            <button onclick="moveDown()">
+                ⬇️ Xuống
+            </button>
+
+            <button onclick="moveLeft()">
+                ⬅️ Trái
+            </button>
+
+            <button onclick="moveRight()">
+                ➡️ Phải
+            </button>
+
+            <button onclick="zoomIn()">
+                🔍 Phóng to
+            </button>
+
+            <button onclick="zoomOut()">
+                🔎 Thu nhỏ
+            </button>
+
+            <button onclick="rotateLeft()">
+                ↶ Xoay trái
+            </button>
+
+            <button onclick="rotateRight()">
+                ↷ Xoay phải
+            </button>
+
+            <button
+                class="reset"
+                onclick="resetPerson()"
+            >
+                🔄 Đặt lại
+            </button>
+
+            <button
+                class="download"
+                onclick="downloadImage()"
+            >
+                💾 Tải ảnh
+            </button>
+
+        </div>
+
+
+        <div
+            class="status"
+            id="status"
+        >
+            Đang tải phông nền...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ==================================================
+    // CANVAS
+    // ==================================================
+
+    const canvas =
+        document.getElementById("canvas");
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    // ==================================================
+    // ĐƯỜNG DẪN ẢNH NỀN
+    //
+    // FILE ẢNH PHẢI NẰM CÙNG THƯ MỤC VỚI index.html
+    // ==================================================
+
+    const BACKGROUND =
+        "./1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg";
+
+
+    // ==================================================
+    // ẢNH NỀN
+    // ==================================================
+
+    const backgroundImage =
+        new Image();
+
+    backgroundImage.src =
+        BACKGROUND;
+
+
+    // ==================================================
+    // ẢNH NGƯỜI
+    // ==================================================
+
+    let personImage = null;
+
+
+    // ==================================================
+    // THÔNG SỐ ẢNH NGƯỜI
+    // ==================================================
+
+    let person = {
+
+        x: canvas.width / 2,
+
+        y: canvas.height / 2,
+
+        scale: 1,
+
+        rotation: 0
+
+    };
+
+
+    // ==================================================
+    // TRẠNG THÁI KÉO
+    // ==================================================
+
+    let dragging = false;
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+
+    // ==================================================
+    // HIỂN THỊ TRẠNG THÁI
+    // ==================================================
+
+    function setStatus(message) {
+
+        document.getElementById("status").textContent =
+            message;
+
+    }
+
+
+    // ==================================================
+    // KHI ẢNH NỀN TẢI XONG
+    // ==================================================
+
+    backgroundImage.onload = function () {
+
+        setStatus(
+            "Phông nền đã sẵn sàng. Hãy chọn ảnh của bạn."
+        );
+
+        draw();
+
+    };
+
+
+    // ==================================================
+    // NẾU KHÔNG TÌM THẤY ẢNH NỀN
+    // ==================================================
+
+    backgroundImage.onerror = function () {
+
+        setStatus(
+            "❌ Không tìm thấy ảnh nền. Hãy kiểm tra tên file."
+        );
+
+        ctx.fillStyle = "#ddd";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.fillStyle = "#333";
+
+        ctx.font = "22px Arial";
+
+        ctx.textAlign = "center";
+
+        ctx.fillText(
+            "Không tìm thấy ảnh nền!",
+            canvas.width / 2,
+            canvas.height / 2
+        );
+
+    };
+
+
+    // ==================================================
+    // CHỌN ẢNH NGƯỜI
+    // ==================================================
+
+    document
+        .getElementById("personInput")
+        .addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+                        const image =
+                            new Image();
+
+
+                        image.onload =
+                            function () {
+
+                                personImage =
+                                    image;
+
+
+                                resetPerson();
+
+
+                                setStatus(
+                                    "Đã thêm ảnh. Bạn có thể kéo ảnh để di chuyển."
+                                );
+
+                            };
+
+
+                        image.onerror =
+                            function () {
+
+                                setStatus(
+                                    "❌ Không thể đọc ảnh."
+                                );
+
+                            };
+
+
+                        image.src =
+                            event.target.result;
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+
+    // ==================================================
+    // VẼ TOÀN BỘ
+    // ==================================================
+
+    function draw() {
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        // ----------------------------------------------
+        // VẼ PHÔNG NỀN
+        // ----------------------------------------------
+
+        if (
+            backgroundImage.complete &&
+            backgroundImage.naturalWidth > 0
+        ) {
+
+            drawBackground();
+
+        } else {
+
+            ctx.fillStyle = "#ddd";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+        }
+
+
+        // ----------------------------------------------
+        // VẼ NGƯỜI
+        // ----------------------------------------------
+
+        if (personImage) {
+
+            drawPerson();
+
+        }
+
+    }
+
+
+    // ==================================================
+    // VẼ PHÔNG NỀN
+    // ==================================================
+
+    function drawBackground() {
+
+        const imageWidth =
+            backgroundImage.naturalWidth;
+
+        const imageHeight =
+            backgroundImage.naturalHeight;
+
+
+        const imageRatio =
+            imageWidth / imageHeight;
+
+
+        const canvasRatio =
+            canvas.width / canvas.height;
+
+
+        let width;
+
+        let height;
+
+
+        /*
+         * Cover:
+         * Ảnh nền luôn phủ kín canvas.
+         */
+
+        if (imageRatio > canvasRatio) {
+
+            height =
+                canvas.height;
+
+            width =
+                height * imageRatio;
+
+        } else {
+
+            width =
+                canvas.width;
+
+            height =
+                width / imageRatio;
+
+        }
+
+
+        const x =
+            (canvas.width - width) / 2;
+
+
+        const y =
+            (canvas.height - height) / 2;
+
+
+        ctx.drawImage(
+            backgroundImage,
+            x,
+            y,
+            width,
+            height
+        );
+
+    }
+
+
+    // ==================================================
+    // VẼ ẢNH NGƯỜI
+    // ==================================================
+
+    function drawPerson() {
+
+        const width =
+            personImage.naturalWidth *
+            person.scale;
+
+
+        const height =
+            personImage.naturalHeight *
+            person.scale;
+
+
+        ctx.save();
+
+
+        // Đưa tâm ảnh về vị trí person.x/person.y
+
+        ctx.translate(
+            person.x,
+            person.y
+        );
+
+
+        // Xoay
+
+        ctx.rotate(
+            person.rotation
+        );
+
+
+        // Vẽ từ tâm
+
+        ctx.drawImage(
+
+            personImage,
+
+            -width / 2,
+
+            -height / 2,
+
+            width,
+
+            height
+
+        );
+
+
+        ctx.restore();
+
+    }
+
+
+    // ==================================================
+    // DI CHUYỂN
+    // ==================================================
+
+    function moveUp() {
+
+        if (!personImage) return;
+
+        person.y -= 10;
+
+        draw();
+
+    }
+
+
+    function moveDown() {
+
+        if (!personImage) return;
+
+        person.y += 10;
+
+        draw();
+
+    }
+
+
+    function moveLeft() {
+
+        if (!personImage) return;
+
+        person.x -= 10;
+
+        draw();
+
+    }
+
+
+    function moveRight() {
+
+        if (!personImage) return;
+
+        person.x += 10;
+
+        draw();
+
+    }
+
+
+    // ==================================================
+    // ZOOM
+    // ==================================================
+
+    function zoomIn() {
+
+        if (!personImage) return;
+
+        person.scale *= 1.1;
+
+        draw();
+
+    }
+
+
+    function zoomOut() {
+
+        if (!personImage) return;
+
+        person.scale *= 0.9;
+
+        draw();
+
+    }
+
+
+    // ==================================================
+    // XOAY
+    // ==================================================
+
+    function rotateLeft() {
+
+        if (!personImage) return;
+
+        person.rotation -=
+            Math.PI / 18;
+
+        draw();
+
+    }
+
+
+    function rotateRight() {
+
+        if (!personImage) return;
+
+        person.rotation +=
+            Math.PI / 18;
+
+        draw();
+
+    }
+
+
+    // ==================================================
+    // ĐẶT LẠI ẢNH
+    // ==================================================
+
+    function resetPerson() {
+
+        if (!personImage) {
+            return;
+        }
+
+
+        /*
+         * Cho chiều rộng ban đầu khoảng 300px.
+         */
+
+        const targetWidth = 300;
+
+
+        person.scale =
+            targetWidth /
+            personImage.naturalWidth;
+
+
+        person.x =
+            canvas.width / 2;
+
+
+        person.y =
+            canvas.height / 2;
+
+
+        person.rotation = 0;
+
+
+        draw();
+
+    }
+
+
+    // ==================================================
+    // LẤY TỌA ĐỘ CHÍNH XÁC TRÊN CANVAS
+    // ==================================================
+
+    function getCanvasPosition(clientX, clientY) {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+
+        return {
+
+            x:
+                (clientX - rect.left)
+                *
+                canvas.width /
+                rect.width,
+
+            y:
+                (clientY - rect.top)
+                *
+                canvas.height /
+                rect.height
+
+        };
+
+    }
+
+
+    // ==================================================
+    // KIỂM TRA CÓ ĐANG BẤM VÀO ẢNH NGƯỜI KHÔNG
+    // ==================================================
+
+    function isInsidePerson(x, y) {
+
+        if (!personImage) {
+            return false;
+        }
+
+
+        const width =
+            personImage.naturalWidth *
+            person.scale;
+
+
+        const height =
+            personImage.naturalHeight *
+            person.scale;
+
+
+        /*
+         * Kiểm tra vùng hình chữ nhật quanh ảnh.
+         */
+
+        return (
+
+            x >= person.x - width / 2 &&
+
+            x <= person.x + width / 2 &&
+
+            y >= person.y - height / 2 &&
+
+            y <= person.y + height / 2
+
+        );
+
+    }
+
+
+    // ==================================================
+    // CHUỘT - BẮT ĐẦU KÉO
+    // ==================================================
+
+    canvas.addEventListener(
+        "mousedown",
+        function (event) {
+
+            if (!personImage) return;
+
+
+            const pos =
+                getCanvasPosition(
+                    event.clientX,
+                    event.clientY
+                );
+
+
+            if (
+                isInsidePerson(
+                    pos.x,
+                    pos.y
+                )
+            ) {
+
+                dragging = true;
+
+
+                offsetX =
+                    pos.x - person.x;
+
+
+                offsetY =
+                    pos.y - person.y;
+
+            }
+
+        }
+    );
+
+
+    // ==================================================
+    // CHUỘT - KÉO
+    // ==================================================
+
+    canvas.addEventListener(
+        "mousemove",
+        function (event) {
+
+            if (!dragging) return;
+
+
+            const pos =
+                getCanvasPosition(
+                    event.clientX,
+                    event.clientY
+                );
+
+
+            person.x =
+                pos.x - offsetX;
+
+
+            person.y =
+                pos.y - offsetY;
+
+
+            draw();
+
+        }
+    );
+
+
+    // ==================================================
+    // CHUỘT - THẢ
+    // ==================================================
+
+    canvas.addEventListener(
+        "mouseup",
+        function () {
+
+            dragging = false;
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "mouseleave",
+        function () {
+
+            dragging = false;
+
+        }
+    );
+
+
+    // ==================================================
+    // ĐIỆN THOẠI - BẮT ĐẦU KÉO
+    // ==================================================
+
+    canvas.addEventListener(
+        "touchstart",
+        function (event) {
+
+            if (!personImage) return;
+
+
+            const touch =
+                event.touches[0];
+
+
+            const pos =
+                getCanvasPosition(
+                    touch.clientX,
+                    touch.clientY
+                );
+
+
+            if (
+                isInsidePerson(
+                    pos.x,
+                    pos.y
+                )
+            ) {
+
+                dragging = true;
+
+
+                offsetX =
+                    pos.x - person.x;
+
+
+                offsetY =
+                    pos.y - person.y;
+
+            }
+
+        },
+        { passive: true }
+    );
+
+
+    // ==================================================
+    // ĐIỆN THOẠI - KÉO
+    // ==================================================
+
+    canvas.addEventListener(
+        "touchmove",
+        function (event) {
+
+            if (!dragging) return;
+
+
+            const touch =
+                event.touches[0];
+
+
+            const pos =
+                getCanvasPosition(
+                    touch.clientX,
+                    touch.clientY
+                );
+
+
+            person.x =
+                pos.x - offsetX;
+
+
+            person.y =
+                pos.y - offsetY;
+
+
+            draw();
+
+        },
+        { passive: true }
+    );
+
+
+    // ==================================================
+    // ĐIỆN THOẠI - THẢ
+    // ==================================================
+
+    canvas.addEventListener(
+        "touchend",
+        function () {
+
+            dragging = false;
+
+        }
+    );
+
+
+    // ==================================================
+    // TẢI ẢNH
+    // ==================================================
+
+    function downloadImage() {
+
+        /*
+         * Nếu chưa chọn ảnh người
+         */
+
+        if (!personImage) {
+
+            alert(
+                "Bạn hãy chọn ảnh của mình trước!"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Tạo ảnh PNG từ canvas.
+         */
+
+        const link =
+            document.createElement("a");
+
+
+        link.download =
+            "anh-da-ghep.png";
+
+
+        link.href =
+            canvas.toDataURL(
+                "image/png"
+            );
+
+
+        link.click();
+
+    }
+
+
+    // ==================================================
+    // KHỞI ĐỘNG
+    // ==================================================
+
+    draw();
+
+</script>
+
+</body>
+</html>
+
+
