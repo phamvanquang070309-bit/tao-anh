@@ -1,133 +1,79 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ghép ảnh</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 30px 15px;
             font-family: Arial, sans-serif;
-            text-align: center;
             background: #f2f2f2;
+            color: #222;
         }
 
-        h1 {
-            color: #333;
-        }
-
-        input {
-            margin: 20px 0;
-        }
-
-        canvas {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 20px auto;
-            border-radius: 10px;
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            background: #007bff;
+        header {
+            background: #222;
             color: white;
-            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+            color: #ccc;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .upload {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .upload label {
+            display: inline-block;
+            background: #222;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 8px;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #0056b3;
+        .upload label:hover {
+            opacity: 0.85;
         }
-    </style>
-</head>
 
-<body>
+        #personInput {
+            display: none;
+        }
 
-    <h1>Ghép ảnh của bạn</h1>
+        .editor {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
 
-    <p>Chọn ảnh của bạn:</p>
+        canv
+```
 
-    <input type="file" id="upload" accept="image/*">
-
-    <canvas id="canvas"></canvas>
-
-    <button id="download">Tải ảnh xuống</button>
-
-    <script>
-        const upload = document.getElementById("upload");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        const download = document.getElementById("download");
-
-        const background = new Image();
-
-        background.src =
-            "1790326127309_8031632657929208865_8031632657929208865_a9dc84cb4212dd04f23c085ca5439725.jpg";
-
-        upload.addEventListener("change", function () {
-
-            const file = upload.files[0];
-
-            if (!file) {
-                return;
-            }
-
-            const userImage = new Image();
-
-            userImage.onload = function () {
-
-                canvas.width = background.naturalWidth;
-                canvas.height = background.naturalHeight;
-
-                // Vẽ ảnh nền
-                ctx.drawImage(
-                    background,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                // Vị trí ảnh người dùng
-                const x = 300;
-                const y = 200;
-                const width = 400;
-                const height = 400;
-
-                // Vẽ ảnh người dùng
-                ctx.drawImage(
-                    userImage,
-                    x,
-                    y,
-                    width,
-                    height
-                );
-            };
-
-            userImage.src = URL.createObjectURL(file);
-        });
-
-        download.addEventListener("click", function () {
-
-            if (canvas.width === 0 || canvas.height === 0) {
-                alert("Vui lòng chọn ảnh trước!");
-                return;
-            }
-
-            const link = document.createElement("a");
-
-            link.download = "anh-da-ghep.png";
-
-            link.href = canvas.toDataURL("image/png");
-
-            link.click();
-        });
-    </script>
-
-</body>
-</html>
